@@ -1,51 +1,39 @@
-# your-code-my-code README
+# Your Code My Code
 
-This is the README for your extension "your-code-my-code". After writing up a brief description, we recommend including the following sections.
+A VS Code extension that intelligently identifies and highlights AI-generated code contributions. This extension monitors file changes and distinguishes between human-typed code and AI-generated insertions from tools like Claude Code, GitHub Copilot, and other AI assistants.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Smart Detection**: Automatically detects AI-generated code insertions vs. manual typing
+- **Visual Highlighting**: Highlights AI-contributed code sections with customizable decorations
+- **Persistent Annotations**: Stores AI code markers that persist across VS Code sessions
+- **Intelligent Filtering**: Distinguishes between manual paste operations and AI tool insertions
+- **User Confirmation**: Optional user confirmation for ambiguous code changes
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code 1.74.0 or higher
+- Node.js and npm (for development)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+This extension will contribute the following settings:
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `yourCodeMyCode.enable`: Enable/disable AI code detection
+* `yourCodeMyCode.highlightStyle`: Customize the visual style for AI code highlighting
+* `yourCodeMyCode.requireConfirmation`: Require user confirmation for detected AI changes
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Initial version in development
+- Detection accuracy may vary with different AI tools
+- Large file changes may require manual verification
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.1.0
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial development version of Your Code My Code extension.
 
 ---
 
