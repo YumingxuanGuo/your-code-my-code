@@ -1,0 +1,220 @@
+{
+  "name": "your-code-my-code",
+  "displayName": "Your Code, My Code.",
+  "description": "Distinguisher for AI code.",
+  "version": "0.0.1",
+  "publisher": "YumingxuanGuo",
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/YumingxuanGuo/your-code-my-code.git"
+  },
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "your-code-my-code.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "editor.action.clipboardPasteAction.intercepted",
+        "title": "Intercept Paste"
+      },
+      {
+        "command": "editor.action.clipboardCutAction.intercepted",
+        "title": "Intercept Cut"
+      },
+      {
+        "command": "editor.action.commentLine.intercepted",
+        "title": "Intercept Comment Line"
+      },
+      {
+        "command": "editor.action.addCommentLine.intercepted",
+        "title": "Intercept Add Comment Line"
+      },
+      {
+        "command": "editor.action.removeCommentLine.intercepted",
+        "title": "Intercept Remove Comment Line"
+      },
+      {
+        "command": "editor.action.indentLines.intercepted",
+        "title": "Intercept Indent Lines"
+      },
+      {
+        "command": "editor.action.outdentLines.intercepted",
+        "title": "Intercept Outdent Lines"
+      },
+      {
+        "command": "editor.action.rename.intercepted",
+        "title": "Intercept Rename"
+      },
+      {
+        "command": "editor.action.formatDocument.intercepted",
+        "title": "Intercept Format Document"
+      },
+      {
+        "command": "editor.action.formatSelection.intercepted",
+        "title": "Intercept Format Selection"
+      },
+      {
+        "command": "editor.action.quickFix.intercepted",
+        "title": "Intercept Quick Fix"
+      },
+      {
+        "command": "editor.action.inPlaceReplace.down.intercepted",
+        "title": "Intercept In Place Replace Down"
+      },
+      {
+        "command": "editor.action.inPlaceReplace.up.intercepted",
+        "title": "Intercept In Place Replace Up"
+      },
+      {
+        "command": "editor.action.startFindReplaceAction.intercepted",
+        "title": "Intercept Start Find Replace Action"
+      },
+      {
+        "command": "acceptSelectedSuggestion.intercepted",
+        "title": "Intercept Autocompletion"
+      },
+      {
+        "command": "acceptAlternativeSelectedSuggestion.intercepted",
+        "title": "Intercept Alternative Autocompletion"
+      },
+      {
+        "command": "your-code-my-code.unannotateBlock",
+        "title": "Remove AI Annotation"
+      },
+      {
+        "command": "your-code-my-code.removePartialAnnotation",
+        "title": "Remove Partial AI Annotation"
+      },
+      {
+        "command": "your-code-my-code.openConfiguration",
+        "title": "Open AI Code Detection Configuration File"
+      },
+      {
+        "command": "your-code-my-code.initializeConfiguration",
+        "title": "Initialize AI Code Detection Configuration File"
+      },
+      {
+        "command": "your-code-my-code.clearAllAnnotations",
+        "title": "Clear All AI Code Annotations"
+      },
+      {
+        "command": "your-code-my-code.resumeAIDetection",
+        "title": "Resume AI Code Detection"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "editor.action.clipboardPasteAction.intercepted",
+        "key": "ctrl+v",
+        "mac": "cmd+v",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.clipboardCutAction.intercepted",
+        "key": "ctrl+x",
+        "mac": "cmd+x",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.commentLine.intercepted",
+        "key": "ctrl+/",
+        "mac": "cmd+/",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.indentLines.intercepted",
+        "key": "ctrl+]",
+        "mac": "cmd+]",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.outdentLines.intercepted",
+        "key": "ctrl+[",
+        "mac": "cmd+[",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.rename.intercepted",
+        "key": "f2",
+        "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "editor.action.formatDocument.intercepted",
+        "key": "shift+alt+f",
+        "mac": "shift+alt+f",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "editor.action.formatSelection.intercepted",
+        "key": "ctrl+k ctrl+f",
+        "mac": "cmd+k cmd+f",
+        "when": "editorHasDocumentSelectionFormattingProvider && editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "editor.action.quickFix.intercepted",
+        "key": "ctrl+.",
+        "mac": "cmd+.",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "editor.action.startFindReplaceAction.intercepted",
+        "key": "ctrl+h",
+        "mac": "cmd+alt+f",
+        "when": "editorFocus || editorIsOpen"
+      },
+      {
+        "command": "acceptSelectedSuggestion.intercepted",
+        "key": "tab",
+        "when": "suggestWidgetVisible"
+      },
+      {
+        "command": "acceptAlternativeSelectedSuggestion.intercepted",
+        "key": "enter",
+        "when": "suggestWidgetVisible && config.editor.acceptSuggestionOnEnter"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/sinon": "^17.0.4",
+    "@types/vscode": "^1.103.0",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.25.8",
+    "eslint": "^9.32.0",
+    "npm-run-all": "^4.1.5",
+    "sinon": "^21.0.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "diff": "^8.0.2"
+  }
+}
