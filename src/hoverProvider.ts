@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Annotation } from './dataStructures';
 import { loadSnapshot, saveSnapshot } from './annotationSystem';
 import { applyHighlightingToEditor } from './highlightingHandler';
+import { loadConfig } from './configuration';
 
 /**
  * Hover provider for AI-annotated code blocks
@@ -124,14 +125,11 @@ export class AnnotationHoverProvider implements vscode.HoverProvider {
  * Register the un-annotate command and hover provider
  */
 export function registerHoverProvider(context: vscode.ExtensionContext): void {
-    // Register hover provider for all supported languages
-    const supportedLanguages = [
-        'typescript', 'javascript', 'python', 'java', 'c', 'cpp', 'csharp', 'go', 'rust'
-    ];
-    
+    // Load configuration and register hover provider for supported languages
+    const config = loadConfig();
     const hoverProvider = new AnnotationHoverProvider(context);
-    
-    supportedLanguages.forEach(language => {
+
+    config.supportedLanguages.forEach(language => {
         const disposable = vscode.languages.registerHoverProvider(
             { language, scheme: 'file' },
             hoverProvider

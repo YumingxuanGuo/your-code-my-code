@@ -290,10 +290,10 @@ function getSnapshotPath(documentUri: vscode.Uri): string {
 	if (!workspaceFolder) {
 		throw new Error('No workspace folder found for document');
 	}
-	
-	const vscodeFolderPath = path.join(workspaceFolder.uri.fsPath, '.vscode');
+
+	const annotationsPath = path.join(workspaceFolder.uri.fsPath, '.vscode', 'your-code-my-code', 'annotations');
 	const relativePath = path.relative(workspaceFolder.uri.fsPath, documentUri.fsPath);
 	const safeFilename = relativePath.replace(/[^a-zA-Z0-9.-]/g, '_');
-	
-	return path.join(vscodeFolderPath, `${safeFilename}.annotations.json`);
+
+	return path.join(annotationsPath, `${safeFilename}.annotations.json`);
 }

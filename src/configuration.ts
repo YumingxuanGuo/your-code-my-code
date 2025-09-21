@@ -87,7 +87,7 @@ function getConfigFilePath(): string | null {
     }
     
     const workspaceRoot = workspaceFolders[0].uri.fsPath;
-    return path.join(workspaceRoot, '.vscode', 'your-code-my-code.json');
+    return path.join(workspaceRoot, '.vscode', 'your-code-my-code', 'your-code-my-code.json');
 }
 
 // Cached configuration to avoid repeated file reads
