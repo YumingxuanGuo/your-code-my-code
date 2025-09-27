@@ -3,6 +3,7 @@
   "displayName": "Your Code, My Code.",
   "description": "Distinguisher for AI code.",
   "version": "0.0.2",
+  "icon": "icon.png",
   "publisher": "YumingxuanGuo",
   "repository": {
     "type": "git",
