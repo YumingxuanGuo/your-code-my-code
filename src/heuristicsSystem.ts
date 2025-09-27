@@ -193,14 +193,127 @@ export class HeuristicsSystem {
             console.log('Filtering change due to git operation suspension');
             return true;
         }
-        
+
         // Filter out if recent user actions (manual operations)
         if (this.recentActions.size > 0) {
             // Log which user actions were detected (for debugging)
             console.log('Filtering change due to recent actions:', Array.from(this.recentActions));
             return true;
         }
-        
+
+        // Filter out auto-completion patterns
+        if (this.isAutoCompletionChange(changeText)) {
+            console.log('Filtering change due to auto-completion pattern:', changeText);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Detect if a change is likely from IDE auto-completion (bracket pairing, quote completion, etc.)
+     */
+    private isAutoCompletionChange(text: string): boolean {
+        // Skip empty or whitespace-only changes
+        if (!text || text.trim().length === 0) {
+            return false;
+        }
+
+        // Common auto-completion patterns
+        const autoCompletionPatterns = [
+            // Bracket pairs
+            /^\($/, /^\)$/, /^\[$/, /^\]$/, /^\{$/, /^\}$/,
+
+            // Quote pairs
+            /^"$/, /^'$/, /^`$/,
+
+            // Common bracket pair completions (when user types opening, IDE adds closing)
+            /^\(\)$/, /^\[\]$/, /^\{\}$/,
+
+            // Quote pair completions
+            /^""$/, /^''$/, /^``$/,
+
+            // Template literal completions
+            /^\$\{\}$/,
+
+            // HTML/XML tag completions
+            /^<\/\w+>$/, // Closing tags
+            /^<\w+><\/\w+>$/, // Complete tag pairs
+
+            // Common IDE completions
+            /^;$/, // Semicolon completion
+            /^,$/, // Comma completion
+
+            // Multi-character but still auto-completion patterns
+            /^\(\s*\)$/, // Parentheses with optional whitespace
+            /^\[\s*\]$/, // Brackets with optional whitespace
+            /^\{\s*\}$/, // Braces with optional whitespace
+
+            // Function call completions
+            /^\(\s*\)\s*;?$/, // function() or function();
+
+            // Array/object literal completions
+            /^\[\s*\]\s*;?$/, // [] or [];
+            /^\{\s*\}\s*;?$/, // {} or {};
+        ];
+
+        // Check if the text matches any auto-completion pattern
+        const isAutoCompletion = autoCompletionPatterns.some(pattern => pattern.test(text));
+
+        if (isAutoCompletion) {
+            return true;
+        }
+
+        // Additional heuristics for auto-completion:
+
+        // 1. Very short single-line changes with only punctuation
+        if (text.length <= 3 && !text.includes('\n') && /^[^\w\s]+$/.test(text)) {
+            return true;
+        }
+
+        // 2. Balanced bracket/quote additions (same number of opening and closing)
+        if (this.hasBalancedPunctuation(text)) {
+            return true;
+        }
+
+        // 3. Changes that are just whitespace formatting after punctuation
+        if (/^[(){}\[\]"'`]+\s*$/.test(text)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if text has balanced punctuation (likely auto-completion)
+     */
+    private hasBalancedPunctuation(text: string): boolean {
+        const pairs = [
+            ['(', ')'],
+            ['[', ']'],
+            ['{', '}'],
+            ['"', '"'],
+            ["'", "'"],
+            ['`', '`']
+        ];
+
+        for (const [open, close] of pairs) {
+            const openCount = (text.match(new RegExp(`\\${open}`, 'g')) || []).length;
+            const closeCount = (text.match(new RegExp(`\\${close}`, 'g')) || []).length;
+
+            // For quotes, they're the same character, so count should be even
+            if (open === close) {
+                if (openCount % 2 === 0 && openCount > 0 && text.length <= 10) {
+                    return true;
+                }
+            } else {
+                // For different open/close characters, counts should match
+                if (openCount === closeCount && openCount > 0 && text.length <= 10) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

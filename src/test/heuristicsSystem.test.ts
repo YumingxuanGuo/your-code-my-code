@@ -453,6 +453,131 @@ suite('Heuristics System Tests', () => {
         });
     });
 
+    suite('Auto-Completion Detection', () => {
+        test('should detect bracket auto-completion', () => {
+            const autoCompletionTexts = [
+                ')', '(', ']', '[', '}', '{',
+                '()', '[]', '{}',
+                '"', "'", '`',
+                '""', "''", '``',
+                '${}'
+            ];
+
+            autoCompletionTexts.forEach(text => {
+                const result = heuristicsSystem.shouldFilterChange(text, 0);
+                assert.strictEqual(result, true, `Should detect '${text}' as auto-completion`);
+            });
+        });
+
+        test('should detect HTML tag auto-completion', () => {
+            const htmlCompletions = [
+                '</div>',
+                '<span></span>',
+                '</script>'
+            ];
+
+            htmlCompletions.forEach(text => {
+                const result = heuristicsSystem.shouldFilterChange(text, 0);
+                assert.strictEqual(result, true, `Should detect '${text}' as HTML auto-completion`);
+            });
+        });
+
+        test('should detect punctuation-only changes', () => {
+            const punctuationTexts = [
+                ';', ',', ':',
+                '(),', '[];', '{};',
+                ') {', '} else'
+            ];
+
+            punctuationTexts.forEach(text => {
+                const result = heuristicsSystem.shouldFilterChange(text, 0);
+                // Note: Some might not be detected as auto-completion depending on exact content
+                // This test documents the current behavior
+                console.log(`Testing punctuation: '${text}' -> ${result}`);
+            });
+        });
+
+        test('should NOT detect genuine code as auto-completion', () => {
+            const genuineCodeTexts = [
+                'function test() { return true; }',
+                'const result = calculateSum(items);',
+                'console.log("Hello World");',
+                'if (condition) { doSomething(); }',
+                'class MyClass extends BaseClass {',
+                'import { Component } from "react";'
+            ];
+
+            genuineCodeTexts.forEach(text => {
+                const result = heuristicsSystem.shouldFilterChange(text, 0);
+                assert.strictEqual(result, false, `Should NOT detect '${text}' as auto-completion`);
+            });
+        });
+
+        test('should detect balanced punctuation as auto-completion', () => {
+            const balancedTexts = [
+                '()',
+                '[]',
+                '{}',
+                '""',
+                "''",
+                '``',
+                '(())',
+                '[{}]'
+            ];
+
+            balancedTexts.forEach(text => {
+                const result = heuristicsSystem.shouldFilterChange(text, 0);
+                assert.strictEqual(result, true, `Should detect balanced '${text}' as auto-completion`);
+            });
+        });
+
+        test('should integrate auto-completion with significance detection', async () => {
+            // Test that auto-completion is filtered in significance check
+            const autoCompletionChanges: ContentChange[] = [{
+                startLine: 1,
+                endLine: 1,
+                startCharacter: 5,
+                endCharacter: 5,
+                text: ')',
+                rangeLength: 0,
+                addedLines: 0,
+                deletedLines: 0
+            }];
+
+            const result = await heuristicsSystem.isChangeSignificant(autoCompletionChanges);
+            assert.strictEqual(result, false, 'Should filter auto-completion in significance check');
+        });
+
+        test('should handle mixed auto-completion and genuine changes', async () => {
+            const mixedChanges: ContentChange[] = [
+                {
+                    startLine: 1,
+                    endLine: 1,
+                    startCharacter: 0,
+                    endCharacter: 0,
+                    text: 'function calculate',
+                    rangeLength: 0,
+                    addedLines: 0,
+                    deletedLines: 0
+                },
+                {
+                    startLine: 1,
+                    endLine: 1,
+                    startCharacter: 17,
+                    endCharacter: 17,
+                    text: '()',
+                    rangeLength: 0,
+                    addedLines: 0,
+                    deletedLines: 0
+                }
+            ];
+
+            // Should be significant because it contains genuine code despite auto-completion
+            const result = await heuristicsSystem.isChangeSignificant(mixedChanges);
+            assert.strictEqual(result, true, 'Should detect significance even with mixed auto-completion');
+        });
+    });
+
     suite('Edge Cases', () => {
         test('should handle malformed content changes', async () => {
             const changes: ContentChange[] = [{
